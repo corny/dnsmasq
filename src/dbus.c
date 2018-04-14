@@ -85,6 +85,11 @@ const char* introspection_xml_template =
 "       <arg name=\"success\" type=\"b\" direction=\"out\"/>\n"
 "    </method>\n"
 #endif
+#ifdef HAVE_METRICS
+"    <method name=\"GetMetrics\">\n"
+"      <arg name=\"metrics\" direction=\"out\" type=\"a{su}\"/>\n"
+"    </method>\n"
+#endif
 "  </interface>\n"
 "</node>\n";
 
@@ -613,6 +618,32 @@ static DBusMessage *dbus_del_lease(DBusMessage* message)
 }
 #endif
 
+
+#ifdef HAVE_METRICS
+static DBusMessage *dbus_get_metrics(DBusMessage* message)
+{
+  DBusMessage *reply = dbus_message_new_method_return(message);
+  DBusMessageIter array, dict, iter;
+
+  dbus_message_iter_init_append(reply, &iter);
+  dbus_message_iter_open_container(&iter, DBUS_TYPE_ARRAY, "{su}", &array);
+
+  for(int i=0; i < __METRIC_MAX; i++) {
+    const char *key     = get_metric_name(i);
+    dbus_uint32_t value = metrics[i];
+
+    dbus_message_iter_open_container(&array, DBUS_TYPE_DICT_ENTRY, NULL, &dict);
+    dbus_message_iter_append_basic(&dict, DBUS_TYPE_STRING, &key);
+    dbus_message_iter_append_basic(&dict, DBUS_TYPE_UINT32, &value);
+    dbus_message_iter_close_container(&array, &dict);
+  }
+
+  dbus_message_iter_close_container(&iter, &array);
+
+  return reply;
+}
+#endif
+
 DBusHandlerResult message_handler(DBusConnection *connection, 
 				  DBusMessage *message, 
 				  void *user_data)
@@ -678,6 +709,12 @@ DBusHandlerResult message_handler(DBusConnection *connection,
   else if (strcmp(method, "DeleteDhcpLease") == 0)
     {
       reply = dbus_del_lease(message);
+    }
+#endif
+#ifdef HAVE_METRICS
+  else if (strcmp(method, "GetMetrics") == 0)
+    {
+      reply = dbus_get_metrics(message);
     }
 #endif
   else if (strcmp(method, "ClearCache") == 0)

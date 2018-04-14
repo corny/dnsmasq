@@ -444,6 +444,10 @@ static char *compile_opts =
 "no-"
 #endif
 "DNSSEC "
+#ifndef HAVE_METRICS
+"no-"
+#endif
+"metrics "
 #ifdef NO_ID
 "no-ID "
 #endif

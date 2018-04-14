@@ -48,6 +48,10 @@ ifeq (,$(filter nodbus,$(DEB_BUILD_OPTIONS)))
      DEB_COPTS += -DHAVE_DBUS
 endif
 
+ifeq (,$(filter nometrics,$(DEB_BUILD_OPTIONS)))
+	DEB_COPTS += -DHAVE_METRICS
+endif
+
 ifeq (,$(filter noidn, $(DEB_BUILD_OPTIONS)))
 	DEB_COPTS += -DHAVE_IDN
 endif

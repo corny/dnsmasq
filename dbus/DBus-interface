@@ -243,6 +243,10 @@ IPv4 or IPv6 address of the lease to remove.
 Note that this function will trigger the DhcpLeaseRemoved signal and the
 configured DHCP lease script will be run with the "del" action.
 
+GetMetrics
+----------
+
+Returns metrics like message type counters.
 
 
 2. SIGNALS

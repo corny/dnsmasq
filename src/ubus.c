@@ -23,13 +23,24 @@
 static struct ubus_context *ubus;
 static struct blob_buf b;
 
-static struct ubus_object_type ubus_object_type = {
-	.name = "dnsmasq",
+#ifdef HAVE_METRICS
+static int ubus_handle_metrics(struct ubus_context *ctx, struct ubus_object *obj,
+		struct ubus_request_data *req, const char *method,
+		struct blob_attr *msg);
+static struct ubus_method ubus_object_methods[] = {
+	{.name = "metrics", .handler = ubus_handle_metrics},
 };
+#else
+static struct ubus_method ubus_object_methods[] = {}
+#endif
+
+static struct ubus_object_type ubus_object_type = UBUS_OBJECT_TYPE("dnsmasq", ubus_object_methods);
 
 static struct ubus_object ubus_object = {
 	.name = "dnsmasq",
 	.type = &ubus_object_type,
+	.methods = ubus_object_methods,
+	.n_methods = ARRAY_SIZE(ubus_object_methods),
 };
 
 void set_ubus_listeners()
@@ -59,6 +70,24 @@ void check_ubus_listeners()
 		ubus = NULL;
 	}
 }
+
+
+#ifdef HAVE_METRICS
+static int ubus_handle_metrics(struct ubus_context *ctx, struct ubus_object *obj,
+		struct ubus_request_data *req, const char *method,
+		struct blob_attr *msg)
+{
+  blob_buf_init(&b, 0);
+
+  for(int i=0; i < __METRIC_MAX; i++) {
+    blobmsg_add_u32(&b, get_metric_name(i), metrics[i]);
+  }
+
+  ubus_send_reply(ctx, req, b.head);
+
+  return 0;
+}
+#endif
 
 void ubus_event_bcast(const char *type, const char *mac, const char *ip, const char *name, const char *interface)
 {

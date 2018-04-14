@@ -1,0 +1,25 @@
+enum {
+    METRIC_BOOTP,
+    METRIC_PXE,
+    METRIC_DHCPACK,
+    METRIC_DHCPDECLINE,
+    METRIC_DHCPDISCOVER,
+    METRIC_DHCPINFORM,
+    METRIC_DHCPNAK,
+    METRIC_DHCPOFFER,
+    METRIC_DHCPRELEASE,
+    METRIC_DHCPREQUEST,
+    METRIC_NOANSWER,
+    METRIC_LEASES_ALLOCATED,
+    __METRIC_MAX,
+};
+
+#ifdef HAVE_METRICS
+#define METRICS_INCREMENT(field) metrics[field]++;
+
+volatile u32 metrics[__METRIC_MAX];
+const char* get_metric_name(int);
+
+#else
+#define METRICS_INCREMENT(field) (void)0
+#endif /* HAVE_METRICS */

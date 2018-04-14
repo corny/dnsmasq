@@ -543,6 +543,16 @@ void lease_update_dns(int force)
     }
 }
 
+inline static void
+lease_update_count(int change)
+{
+  leases_left -= change;
+
+#ifdef HAVE_METRICS
+  metrics[METRIC_LEASES_ALLOCATED] += change;
+#endif
+}
+
 void lease_prune(struct dhcp_lease *target, time_t now)
 {
   struct dhcp_lease *lease, *tmp, **up;
@@ -563,7 +573,7 @@ void lease_prune(struct dhcp_lease *target, time_t now)
 	  lease->next = old_leases;
 	  old_leases = lease;
 	  
-	  leases_left++;
+	  lease_update_count(-1);
 	}
       else
 	up = &lease->next;
@@ -764,7 +774,7 @@ static struct dhcp_lease *lease_allocate(void)
   leases = lease;
   
   file_dirty = 1;
-  leases_left--;
+  lease_update_count(+1);
 
   return lease;
 }
