@@ -23,9 +23,42 @@
 static struct ubus_context *ubus;
 static struct blob_buf b;
 
-static struct ubus_object_type ubus_object_type = {
-	.name = "dnsmasq",
+#ifdef HAVE_METRICS
+static int ubus_handle_metrics(struct ubus_context *ctx, struct ubus_object *obj,
+		struct ubus_request_data *req, const char *method,
+		struct blob_attr *msg)
+{
+  blob_buf_init(&b, 0);
+
+  for(int i=0; i < COUNTER_MAX; i++) {
+    switch (i) {
+      case COUNTER_BOOTP:        blobmsg_add_u32(&b, "bootp", metrics[i]); break;
+      case COUNTER_PXE:          blobmsg_add_u32(&b, "pxe", metrics[i]); break;
+      case COUNTER_DHCPACK:      blobmsg_add_u32(&b, "dhcpack", metrics[i]); break;
+      case COUNTER_DHCPDECLINE:  blobmsg_add_u32(&b, "dhcpdecline", metrics[i]); break;
+      case COUNTER_DHCPDISCOVER: blobmsg_add_u32(&b, "dhcpdiscover", metrics[i]); break;
+      case COUNTER_DHCPINFORM:   blobmsg_add_u32(&b, "dhcpinform", metrics[i]); break;
+      case COUNTER_DHCPNAK:      blobmsg_add_u32(&b, "dhcpnak", metrics[i]); break;
+      case COUNTER_DHCPOFFER:    blobmsg_add_u32(&b, "dhcpoffer", metrics[i]); break;
+      case COUNTER_DHCPRELEASE:  blobmsg_add_u32(&b, "dhcprelease", metrics[i]); break;
+      case COUNTER_DHCPREQUEST:  blobmsg_add_u32(&b, "dhcprequest", metrics[i]); break;
+      case COUNTER_NOANSWER:     blobmsg_add_u32(&b, "noanswer", metrics[i]); break;
+    }
+  }
+
+  ubus_send_reply(ctx, req, b.head);
+
+  return 0;
+}
+#endif
+
+static struct ubus_method ubus_object_methods[] = {
+#ifdef HAVE_METRICS
+	{.name = "metrics", .handler = ubus_handle_metrics},
+#endif
 };
+
+static struct ubus_object_type ubus_object_type = UBUS_OBJECT_TYPE("dnsmasq", ubus_object_methods);
 
 static struct ubus_object ubus_object = {
 	.name = "dnsmasq",

@@ -1026,6 +1026,10 @@ extern struct daemon {
   char *timestamp_file;
 #endif
 
+#ifdef HAVE_METRICS
+  char *metrics_path;
+#endif
+
   /* globally used stuff for DNS */
   char *packet; /* packet buffer */
   int packet_buff_sz; /* size of above */

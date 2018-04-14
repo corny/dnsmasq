@@ -506,6 +506,10 @@ int main (int argc, char **argv)
 	    _exit(0);
 	}
 #endif
+
+#ifdef HAS_METRICS
+  startMetrics(daemon->metrics_path);
+#endif
             
       /* write pidfile _after_ forking ! */
       if (daemon->runfile)

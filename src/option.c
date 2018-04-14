@@ -161,6 +161,7 @@ struct myoption {
 #define LOPT_TFTP_MTU      349
 #define LOPT_REPLY_DELAY   350
 #define LOPT_RAPID_COMMIT  351
+#define LOPT_METRICS_PATH  352
  
 #ifdef HAVE_GETOPT_LONG
 static const struct option opts[] =  
@@ -327,6 +328,9 @@ static const struct myoption opts[] =
     { "dhcp-ttl", 1, 0 , LOPT_DHCPTTL },
     { "dhcp-reply-delay", 1, 0, LOPT_REPLY_DELAY },
     { "dhcp-rapid-commit", 0, 0, LOPT_RAPID_COMMIT },
+#ifdef HAVE_METRICS
+    { "metrics-socket", 1, 0, LOPT_METRICS_PATH },
+#endif
     { NULL, 0, 0, 0 }
   };
 
@@ -500,6 +504,9 @@ static struct {
   { LOPT_DHCPTTL, ARG_ONE, "<ttl>", gettext_noop("Set TTL in DNS responses with DHCP-derived addresses."), NULL }, 
   { LOPT_REPLY_DELAY, ARG_ONE, "<integer>", gettext_noop("Delay DHCP replies for at least number of seconds."), NULL },
   { LOPT_RAPID_COMMIT, OPT_RAPID_COMMIT, NULL, gettext_noop("Enables DHCPv4 Rapid Commit option."), NULL },
+#ifdef HAVE_METRICS
+  { LOPT_METRICS_PATH, ARG_ONE, "<path>", gettext_noop("Path for the metrics socket"), NULL },
+#endif
   { 0, 0, NULL, NULL, NULL }
 }; 
 
@@ -4192,7 +4199,13 @@ err:
 	break;
       }
 #endif
-		
+
+#ifdef HAVE_METRICS
+    case LOPT_METRICS_PATH:
+      daemon->metrics_path = opt_string_alloc(arg);
+      break;
+#endif
+
     default:
       ret_err(_("unsupported option (check that dnsmasq was compiled with DHCP/TFTP/DNSSEC/DBus support)"));
       
