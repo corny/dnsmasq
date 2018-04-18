@@ -624,11 +624,12 @@ static DBusMessage *dbus_get_metrics(DBusMessage* message)
 {
   DBusMessage *reply = dbus_message_new_method_return(message);
   DBusMessageIter array, dict, iter;
+  int i;
 
   dbus_message_iter_init_append(reply, &iter);
   dbus_message_iter_open_container(&iter, DBUS_TYPE_ARRAY, "{su}", &array);
 
-  for(int i=0; i < __METRIC_MAX; i++) {
+  for (i = 0; i < __METRIC_MAX; i++) {
     const char *key     = get_metric_name(i);
     dbus_uint32_t value = metrics[i];
 
