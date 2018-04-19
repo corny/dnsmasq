@@ -544,17 +544,16 @@ void lease_update_dns(int force)
 }
 
 inline static void
-lease_update_count(int change)
+lease_update_count(int change, struct dhcp6_lease *lease)
 {
   leases_left -= change;
 
 #ifdef HAVE_METRICS
-  metrics[METRIC_LEASES_CURRENT] += change;
-
-  if (change > 0)
-    metrics[METRIC_LEASES_ALLOCATED]++;
-  else
-    metrics[METRIC_LEASES_PRUNED]++;
+  if (change > 0) {
+    metrics[lease.in_addr6 ? METRIC_LEASES_ALLOCATED_6 : METRIC_LEASES_ALLOCATED_4]++;
+  } else {
+    metrics[lease.in_addr6 ? METRIC_LEASES_PRUNED_6 : METRIC_LEASES_PRUNED_4]++;
+  }
 #endif
 }
 
@@ -570,15 +569,15 @@ void lease_prune(struct dhcp_lease *target, time_t now)
 	  file_dirty = 1;
 	  if (lease->hostname)
 	    dns_dirty = 1;
-	  
+
+	  lease_update_count(-1, lease);
+
  	  *up = lease->next; /* unlink */
 	  
 	  /* Put on old_leases list 'till we
 	     can run the script */
 	  lease->next = old_leases;
 	  old_leases = lease;
-	  
-	  lease_update_count(-1);
 	}
       else
 	up = &lease->next;
@@ -779,7 +778,7 @@ static struct dhcp_lease *lease_allocate(void)
   leases = lease;
   
   file_dirty = 1;
-  lease_update_count(+1);
+  lease_update_count(+1, lease);
 
   return lease;
 }

@@ -32,9 +32,10 @@ const char * metric_names[] = {
     "dhcp_release",
     "dhcp_request",
     "noanswer",
-    "leases_current",
-    "leases_allocated",
-    "leases_pruned",
+    "leases_allocated_4",
+    "leases_pruned_4",
+    "leases_allocated_6",
+    "leases_pruned_6",
 };
 
 const char* get_metric_name(int i) {
