@@ -549,7 +549,12 @@ lease_update_count(int change)
   leases_left -= change;
 
 #ifdef HAVE_METRICS
-  metrics[METRIC_LEASES_ALLOCATED] += change;
+  metrics[METRIC_LEASES_CURRENT] += change;
+
+  if (change > 0)
+    metrics[METRIC_LEASES_ALLOCATED]++;
+  else
+    metrics[METRIC_LEASES_PRUNED]++;
 #endif
 }
 
