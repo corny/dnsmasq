@@ -945,7 +945,8 @@ int main (int argc, char **argv)
 #endif
 
 #ifdef HAVE_UBUS
-      set_ubus_listeners();
+      if (daemon->enable_ubus)
+        set_ubus_listeners();
 #endif
 
 #ifdef HAVE_DHCP
@@ -1079,7 +1080,8 @@ int main (int argc, char **argv)
 #endif
 
 #ifdef HAVE_UBUS
-      check_ubus_listeners();
+      if (daemon->enable_ubus)
+        check_ubus_listeners();
 #endif
 
       check_dns_listeners(now);
