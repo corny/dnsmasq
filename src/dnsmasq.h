@@ -157,32 +157,34 @@ struct event_desc {
   int event, data, msg_sz;
 };
 
-#define EVENT_RELOAD     1
-#define EVENT_DUMP       2
-#define EVENT_ALARM      3
-#define EVENT_TERM       4
-#define EVENT_CHILD      5
-#define EVENT_REOPEN     6
-#define EVENT_EXITED     7
-#define EVENT_KILLED     8
-#define EVENT_EXEC_ERR   9
-#define EVENT_PIPE_ERR   10
-#define EVENT_USER_ERR   11
-#define EVENT_CAP_ERR    12
-#define EVENT_PIDFILE    13
-#define EVENT_HUSER_ERR  14
-#define EVENT_GROUP_ERR  15
-#define EVENT_DIE        16
-#define EVENT_LOG_ERR    17
-#define EVENT_FORK_ERR   18
-#define EVENT_LUA_ERR    19
-#define EVENT_TFTP_ERR   20
-#define EVENT_INIT       21
-#define EVENT_NEWADDR    22
-#define EVENT_NEWROUTE   23
-#define EVENT_TIME_ERR   24
-#define EVENT_SCRIPT_LOG 25
-#define EVENT_TIME       26
+enum {
+  EVENT_RELOAD = 1,
+  EVENT_DUMP,
+  EVENT_ALARM,
+  EVENT_TERM,
+  EVENT_CHILD,
+  EVENT_REOPEN,
+  EVENT_EXITED,
+  EVENT_KILLED,
+  EVENT_EXEC_ERR,
+  EVENT_PIPE_ERR,
+  EVENT_USER_ERR,
+  EVENT_CAP_ERR,
+  EVENT_PIDFILE,
+  EVENT_HUSER_ERR,
+  EVENT_GROUP_ERR,
+  EVENT_DIE,
+  EVENT_LOG_ERR,
+  EVENT_FORK_ERR,
+  EVENT_LUA_ERR,
+  EVENT_TFTP_ERR,
+  EVENT_INIT,
+  EVENT_NEWADDR,
+  EVENT_NEWROUTE,
+  EVENT_TIME_ERR,
+  EVENT_SCRIPT_LOG,
+  EVENT_TIME,
+};
 
 /* Exit codes. */
 #define EC_GOOD        0
@@ -196,65 +198,67 @@ struct event_desc {
 /* Trust the compiler dead-code eliminator.... */
 #define option_bool(x) (((x) < 32) ? daemon->options & (1u << (x)) : daemon->options2 & (1u << ((x) - 32)))
 
-#define OPT_BOGUSPRIV      0
-#define OPT_FILTER         1
-#define OPT_LOG            2
-#define OPT_SELFMX         3
-#define OPT_NO_HOSTS       4
-#define OPT_NO_POLL        5
-#define OPT_DEBUG          6
-#define OPT_ORDER          7
-#define OPT_NO_RESOLV      8
-#define OPT_EXPAND         9
-#define OPT_LOCALMX        10
-#define OPT_NO_NEG         11
-#define OPT_NODOTS_LOCAL   12
-#define OPT_NOWILD         13
-#define OPT_ETHERS         14
-#define OPT_RESOLV_DOMAIN  15
-#define OPT_NO_FORK        16
-#define OPT_AUTHORITATIVE  17
-#define OPT_LOCALISE       18
-#define OPT_DBUS           19
-#define OPT_DHCP_FQDN      20
-#define OPT_NO_PING        21
-#define OPT_LEASE_RO       22
-#define OPT_ALL_SERVERS    23
-#define OPT_RELOAD         24
-#define OPT_LOCAL_REBIND   25  
-#define OPT_TFTP_SECURE    26
-#define OPT_TFTP_NOBLOCK   27
-#define OPT_LOG_OPTS       28
-#define OPT_TFTP_APREF_IP  29
-#define OPT_NO_OVERRIDE    30
-#define OPT_NO_REBIND      31
-#define OPT_ADD_MAC        32
-#define OPT_DNSSEC_PROXY   33
-#define OPT_CONSEC_ADDR    34
-#define OPT_CONNTRACK      35
-#define OPT_FQDN_UPDATE    36
-#define OPT_RA             37
-#define OPT_TFTP_LC        38
-#define OPT_CLEVERBIND     39
-#define OPT_TFTP           40
-#define OPT_CLIENT_SUBNET  41
-#define OPT_QUIET_DHCP     42
-#define OPT_QUIET_DHCP6    43
-#define OPT_QUIET_RA	   44
-#define OPT_DNSSEC_VALID   45
-#define OPT_DNSSEC_TIME    46
-#define OPT_DNSSEC_DEBUG   47
-#define OPT_DNSSEC_IGN_NS  48 
-#define OPT_LOCAL_SERVICE  49
-#define OPT_LOOP_DETECT    50
-#define OPT_EXTRALOG       51
-#define OPT_TFTP_NO_FAIL   52
-#define OPT_SCRIPT_ARP     53
-#define OPT_MAC_B64        54
-#define OPT_MAC_HEX        55
-#define OPT_TFTP_APREF_MAC 56
-#define OPT_RAPID_COMMIT   57
-#define OPT_LAST           58
+enum {
+  OPT_BOGUSPRIV,
+  OPT_FILTER,
+  OPT_LOG,
+  OPT_SELFMX,
+  OPT_NO_HOSTS,
+  OPT_NO_POLL,
+  OPT_DEBUG,
+  OPT_ORDER,
+  OPT_NO_RESOLV,
+  OPT_EXPAND,
+  OPT_LOCALMX,
+  OPT_NO_NEG,
+  OPT_NODOTS_LOCAL,
+  OPT_NOWILD,
+  OPT_ETHERS,
+  OPT_RESOLV_DOMAIN,
+  OPT_NO_FORK,
+  OPT_AUTHORITATIVE,
+  OPT_LOCALISE,
+  OPT_DBUS,
+  OPT_DHCP_FQDN,
+  OPT_NO_PING,
+  OPT_LEASE_RO,
+  OPT_ALL_SERVERS,
+  OPT_RELOAD,
+  OPT_LOCAL_REBIND,
+  OPT_TFTP_SECURE,
+  OPT_TFTP_NOBLOCK,
+  OPT_LOG_OPTS,
+  OPT_TFTP_APREF_IP,
+  OPT_NO_OVERRIDE,
+  OPT_NO_REBIND,
+  OPT_ADD_MAC,
+  OPT_DNSSEC_PROXY,
+  OPT_CONSEC_ADDR,
+  OPT_CONNTRACK,
+  OPT_FQDN_UPDATE,
+  OPT_RA,
+  OPT_TFTP_LC,
+  OPT_CLEVERBIND,
+  OPT_TFTP,
+  OPT_CLIENT_SUBNET,
+  OPT_QUIET_DHCP,
+  OPT_QUIET_DHCP6,
+  OPT_QUIET_RA,
+  OPT_DNSSEC_VALID,
+  OPT_DNSSEC_TIME,
+  OPT_DNSSEC_DEBUG,
+  OPT_DNSSEC_IGN_NS,
+  OPT_LOCAL_SERVICE,
+  OPT_LOOP_DETECT,
+  OPT_EXTRALOG,
+  OPT_TFTP_NO_FAIL,
+  OPT_SCRIPT_ARP,
+  OPT_MAC_B64,
+  OPT_MAC_HEX,
+  OPT_TFTP_APREF_MAC,
+  OPT_RAPID_COMMIT,
+  OPT_LAST,
+};
 
 /* extra flags for my_syslog, we use a couple of facilities since they are known 
    not to occupy the same bits as priorities, no matter how syslog.h is set up. */
@@ -308,13 +312,15 @@ struct naptr {
 };
 
 #ifndef NO_ID
-#define TXT_STAT_CACHESIZE     1
-#define TXT_STAT_INSERTS       2
-#define TXT_STAT_EVICTIONS     3
-#define TXT_STAT_MISSES        4
-#define TXT_STAT_HITS          5
-#define TXT_STAT_AUTH          6
-#define TXT_STAT_SERVERS       7
+enum {
+  TXT_STAT_CACHESIZE = 1,
+  TXT_STAT_INSERTS,
+  TXT_STAT_EVICTIONS,
+  TXT_STAT_MISSES,
+  TXT_STAT_HITS,
+  TXT_STAT_AUTH,
+  TXT_STAT_SERVERS,
+};
 #endif
 
 struct txt_record {
